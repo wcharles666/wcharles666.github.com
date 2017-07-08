@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>FlyBird</title>
+</head>
+<body>
+<canvas id="canvas" width="400" height="600"></canvas>
+<button id="btn">暂停游戏</button>
+<!--<button id="btn1">开始游戏</button>-->
+<script>
+    var score = 0;
+    var x1 = 200;
+    var x2 = 200;
+    var str = "game over";
+    var canvas = document.getElementById("canvas").getContext('2d');
+    var btn = document.getElementById("btn");
+    //-----------------------------背景图-----------------------------------------------------//
+    var background = new Image();
+    background.src = "bg.png";
+    //-----------------------------地面图-----------------------------------------------------//
+    var img1 = new Image();
+    img1.src = "ground.png";
+    //------------------------------死亡的小鸟------------------------------------------------//
+    var  ns  = new Image();
+    ns.src ="pipe.png";
+    //-----------------------------小  鸟-----------------------------------------------------//
+    var niaofei2 = new Image();
+    var i = 0;
+    var arr = ["0.gif", "1.gif", "2.gif"];
+    var high = 210;
+    //-----------------------------加速度----------------------------------------------------//
+    var v1 = 10;
+    var v2;
+    var a = 0.01;
+    function niaofei1() {
+        i++;
+        i = i % 3;
+        niaofei2.src = arr[i];
+        v2 = v1 + a;
+        high = high + (v1 + v2) / 2;
+        canvas.drawImage(niaofei2, 100, high, 40, 40);
+//-----------------------------键盘控制--------------------------------------------------//
+        window.onkeydown = function (event) {
+            var e = event || window.event;
+            if (e.keyCode == 32) {
+                high = high - 50;
+            }
+        }
+    }
+    //-----------------------------移动的上下管子--------------------------------------------//
+    var img = new Image();
+    img.src = "pipe.png";
+    var downpipeimg = new Image();
+    downpipeimg.src = "pipe.png";
+    var downpipeheight = 300;
+    var up = 400;
+    var up1;
+    //------------------------------定时主函数----------------------------------------------//
+    var timer = setInterval(function () {
+        up = up - 10;
+        if (up < -99) {
+            up = 400;
+            console.log(score);
+            x1 = parseInt(Math.random() * 150) + 100;
+            x2 = 400 - x1;
+            downpipeheight = 500 - x2;
+        }
+//-----------------------------分数设置--------------------------------------------------//
+        else if (up == 30) {
+            score++;
+        }
+//------------------------------画图----------------------------------------------------//
+        canvas.clearRect(0, 0, 400, 600);
+        canvas.drawImage(background, 0, 0, 400, 600);
+        canvas.drawImage(img1, 0, 500, 400, 200);
+        niaofei1();
+        canvas.drawImage(img, 150, 500, 150, 800, up, 0, 100, x1);
+        canvas.drawImage(downpipeimg, 0, 500, 150, 500, up, downpipeheight, 100, x2);
+//------------------------------分数显示-----------------------------------------------//
+        if (score <= 5 && score >= 1) {
+            canvas.fillstyle = "rgb(0,0,0)";
+            canvas.font = "30px Accent";
+            canvas.fillText("青铜：" + score, 50, 50);
+        }
+        if (score <= 10 && score > 5) {
+            canvas.fillstyle = "rgb(0,0,0)";
+            canvas.font = "30px Accent";
+            canvas.fillText("白银：" + score, 50, 50);
+        }
+        if (score <= 15 && score > 10) {
+            canvas.fillstyle = "rgb(0,0,0)";
+            canvas.font = "30px Accent";
+            canvas.fillText("黄金：" + score, 50, 50);
+        }
+        if (score <= 20 && score > 15) {
+            canvas.fillstyle = "rgb(0,0,0)";
+            canvas.font = "30px Accent";
+            canvas.fillText("白金：" + score, 50, 50);
+        }
+        if (score <= 25 && score > 20) {
+            canvas.fillstyle = "rgb(0,0,0)";
+            canvas.font = "30px Accent";
+            canvas.fillText("钻石：" + score, 50, 50);
+        }
+        if (score > 25) {
+            canvas.fillstyle = "rgb(0,0,0)";
+            canvas.font = "30px Accent";
+            canvas.fillText("王者：" + score, 50, 50);
+        }
+//---------------------------------碰撞条件-------------------------------------------------//
+        if (up <= 140 && high > 500 - x2 - 20) {
+            clearInterval(timer);
+            canvas.fillstyle = "rgb(0,0,0)";
+            canvas.font = "45px Accent";
+            canvas.fillText(str, 80, 250);
+            canvas.clearRect(100, high, 40, 40);
+            canvas.drawImage(ns,840,0,115,90,100,high,40,40);
+        }
+        else if (up <= 140 && high < x1) {
+            clearInterval(timer);
+            canvas.fillstyle = "rgb(0,0,0)";
+            canvas.font = "45px Accent";
+            canvas.fillText(str, 80, 250);
+            canvas.clearRect(100, high, 40, 40);
+            canvas.drawImage(ns,840,0,115,90,100,high,40,40);
+        }
+        else if (high >= 475) {
+            clearInterval(timer);
+            canvas.fillstyle = "rgb(0,0,0)";
+            canvas.font = "45px Accent";
+            canvas.fillText(str, 80, 250);
+            canvas.clearRect(100, high, 40, 40);
+            canvas.drawImage(ns,840,0,115,90,100,high,40,40);
+
+
+        }
+        else if (high < 0) {
+            clearInterval(timer);
+            canvas.fillstyle = "rgb(0,0,0)";
+            canvas.font = "45px Accent";
+            canvas.fillText(str, 80, 250);
+            canvas.clearRect(100, high, 40, 40);
+            canvas.drawImage(ns,840,0,115,90,100,high,40,40);
+        }
+    }, 80);
+//-------------------------------------暂停停止游戏-------------------------------------------------//
+    btn.onclick = function () {
+        clearInterval(timer);
+
+    }
+//-------------------------------------继续游戏----------------------------------------------------//
+
+
+
+</script>
+</body>
+</html>
